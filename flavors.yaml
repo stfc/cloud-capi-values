@@ -1,0 +1,43 @@
+# This file controls the workers found within a cluster
+
+# The worker node groups for the cluster
+nodeGroups:
+  - # This group uses details found in nodeGroupDefault below
+    # and is enabled by default
+    name: default-md-0
+    # The number of machines in the node group if autoscale is false
+    machineCount: 3
+
+  # The following node groups are optional and can be enabled by uncommenting them
+  # - name: md-l3-small
+  #   machineFlavor: l3.small
+  #   machineCount: 1
+  # - name: md-rtx4000
+  #   machineFlavor: g-rtx4000.x1
+  #   machineCount: 1
+
+# Defaults for node groups
+nodeGroupDefaults:
+  # Indicates if the node group should be autoscaled
+  autoscale: false
+  # The flavor to use for machines in the node group
+  machineFlavor: l3.nano
+
+  healthCheck:
+    # Indicates if the machine health check should be enabled
+    enabled: true
+    # The spec for the health check
+    spec:
+      # By default, unhealthy worker nodes are always remediated
+      maxUnhealthy: 100%
+      # If a node takes longer than 10 mins to startup, remediate it
+      nodeStartupTimeout: 10m0s
+      # By default, consider a worker node that has not been Ready for
+      # more than 5 mins unhealthy
+      unhealthyConditions:
+        - type: Ready
+          status: Unknown
+          timeout: 5m0s
+        - type: Ready
+          status: "False"
+          timeout: 5m0s

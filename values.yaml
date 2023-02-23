@@ -154,6 +154,8 @@ clusterNetworking:
   # Custom nameservers to use for the hosts
   dnsNameservers:
     - 130.246.209.132
+    - 130.246.209.163
+    - 130.246.208.220
   externalNetworkId: External
 
 # Settings for registry mirrors

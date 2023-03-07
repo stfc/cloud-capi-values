@@ -1,0 +1,176 @@
+global:
+  # The prefix to use for images
+  # UKRI policy dictates this should be a policy compliant image
+  imagePrefix: harbor.stfc.ac.uk/stfc-cloud/
+
+# The PEM-encoded CA certificate for openstack.stfc.ac.uk
+# this expires 2023-12-05T23:59:59Z (UTC)
+# This allows a user to skip adding verify: false
+# by pre-bundling the image for everyone
+cloudCACert: |
+  -----BEGIN CERTIFICATE-----
+  MIIJUzCCBzugAwIBAgIQRwOt02OLz0HVoVlHvE5yAjANBgkqhkiG9w0BAQwFADBE
+  MQswCQYDVQQGEwJOTDEZMBcGA1UEChMQR0VBTlQgVmVyZW5pZ2luZzEaMBgGA1UE
+  AxMRR0VBTlQgRVYgUlNBIENBIDQwHhcNMjIxMjA1MDAwMDAwWhcNMjMxMjA1MjM1
+  OTU5WjCBtTEaMBgGA1UEBRMRR292ZXJubWVudCBFbnRpdHkxEzARBgsrBgEEAYI3
+  PAIBAxMCR0IxGjAYBgNVBA8TEUdvdmVybm1lbnQgRW50aXR5MQswCQYDVQQGEwJH
+  QjESMBAGA1UECBMJV2lsdHNoaXJlMSMwIQYDVQQKExpVSyBSZXNlYXJjaCBhbmQg
+  SW5ub3ZhdGlvbjEgMB4GA1UEAxMXc2VydmljZTMubnViZXMucmwuYWMudWswggIi
+  MA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCrg8uLGrLva3rliWraAxJsbRk5
+  8JqfEoHCaSd/g6Zkf6pjqepQPRtkqsNDRDv68a1ltzpp1QVXiasCRTonfLUqIVsd
+  fLB/Vres4PRY9foYaP8p+a+5lo5HmmKxIpTCALFZiwLs2/lyr/qaUysJBjOYrOXQ
+  /d1c3M6cPp5D8icWpTH3YMhsVLhvLsElOszS/LiD7UGo5Csb5b64y7Lt3azEmoEd
+  hwEQg+ExQ94cL7LD6AP8w91anNGp/s1XFqKicPLNiCuKsCDJ/ZWkd8ie7hEujZqn
+  yrvzPnrQwdFymS/QBxHlsG+YN7RkfWVtLQWZRN45EFgp7kpa0AwUK4ONAOMalOeR
+  4BIWnHGVUc6BPf39scVAG4nhTEI2iYOvZx0W5Y65zyjzNfl7Uk4xb9clBTKINmHf
+  +AEaLX7uFgK5SaZCuxrkqT38AOheUe3QXCIFBUbWTj72G801AEDlxCuu8lLSSALh
+  0XdOpCpFavTqgGefXUS+/Q919CQZQHFqKXK69NS1ao138DAC0Kz654fOFC1IpBG+
+  LFpkvt77qq7/kSR99U+2qAS36YAxZ9VVlQQibNvGHzMZUaeEXAubmlPBPc0OUsdo
+  YEwnRTkqHLfIiIlCvVxyWQzP14thREW0r35iWmlHeCRMFhSbR7o3ehZ0mj2nIX/i
+  wjrtBG+4YfSM4yfWEQIDAQABo4IDzTCCA8kwHwYDVR0jBBgwFoAUtiAOrqPL6VUD
+  BhNm1Ky+J5BUYPMwHQYDVR0OBBYEFDA64MSZqnj1BnffiEpadakRbJT2MA4GA1Ud
+  DwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggr
+  BgEFBQcDAjBJBgNVHSAEQjBAMDUGDCsGAQQBsjEBAgEFATAlMCMGCCsGAQUFBwIB
+  FhdodHRwczovL3NlY3RpZ28uY29tL0NQUzAHBgVngQwBATA/BgNVHR8EODA2MDSg
+  MqAwhi5odHRwOi8vR0VBTlQuY3JsLnNlY3RpZ28uY29tL0dFQU5URVZSU0FDQTQu
+  Y3JsMHUGCCsGAQUFBwEBBGkwZzA6BggrBgEFBQcwAoYuaHR0cDovL0dFQU5ULmNy
+  dC5zZWN0aWdvLmNvbS9HRUFOVEVWUlNBQ0E0LmNydDApBggrBgEFBQcwAYYdaHR0
+  cDovL0dFQU5ULm9jc3Auc2VjdGlnby5jb20wggF9BgorBgEEAdZ5AgQCBIIBbQSC
+  AWkBZwB1AK33vvp8/xDIi509nB4+GGq0Zyldz7EMJMqFhjTr3IKKAAABhOLIDWwA
+  AAQDAEYwRAIgabdDW4rh+WM2+niVu0pKTVGbUJ5oKyPKRTIffg4ty7UCICf8uTVV
+  1/jI+69FeFhYsyv9cts2IO4B6yvkApyGh3QCAHcAVYHUwhaQNgFK6gubVzxT8MDk
+  OHhwJQgXL6OqHQcT0wwAAAGE4sgNiAAABAMASDBGAiEAhaAQqo2pFc26jI5BfDjV
+  cqFiytkCZA5eUScyZugl+igCIQDgAOMX9eK4pUCW+KHEhZqR06jiQ8SM33aT0eOk
+  Q/xfmgB1AHoyjFTYty22IOo44FIe6YQWcDIThU070ivBOlejUutSAAABhOLIDS4A
+  AAQDAEYwRAIgbeBb2dvd2JAa4+TJ58xvL2xX6KRq/TdDPAEwyWmvy+0CICSL8/QC
+  HUz0ewuTUnal6CUmwANM3kMnBvdhTerRAy6IMIHFBgNVHREEgb0wgbqCF3NlcnZp
+  Y2UzLm51YmVzLnJsLmFjLnVrghRjbG91ZC5udWJlcy5ybC5hYy51a4IWY2xvdWQu
+  bnViZXMuc3RmYy5hYy51a4IQY2xvdWQuc3RmYy5hYy51a4ITbmV3Y2xvdWQuc3Rm
+  Yy5hYy51a4IYb3BlbnN0YWNrLm51YmVzLnJsLmFjLnVrghpvcGVuc3RhY2subnVi
+  ZXMuc3RmYy5hYy51a4IUb3BlbnN0YWNrLnN0ZmMuYWMudWswDQYJKoZIhvcNAQEM
+  BQADggIBAC/iSuXvjsIui/VGjp2FvSrUGWvj59g47nFcrQW2wHWrtT+BKTKCAaLD
+  1lMMwc3oeGmdoFkq5m/nSo+MvDtd2kijWgtCEK5Rj790SorwH4oT/hLDeYnZAgfd
+  r387xdJxDRv1a+lyjmytHaGrOoNzEWZaIgQmzk/RRq3OuJ0wOVDFaH5a7678gWog
+  6EsXMSU94kUAMZ1rt+m+BypVRSYjdGDiXbTOdp4HavadsvgqdpyPPFtierFjXGqg
+  ZccUTBDBkif8VQzq7f0hT+FClH0104DE7CvhYyuAHMS4T6a4vIgw3wJ4vXsfOe71
+  htuOOQ9DPm+VhHPrHaEM1b6BPDuZwcjX9EC7KvTItRAMpdvMKNGfyttRnAbAUpTh
+  fP+PIeIWH/Y4Zjk7WwtI4QvKW1ifGFDwdmdtt+PulaY4zHv2s5icegfjO5WuCT2c
+  VJ3Qe4GlZzTVkw625qfOnie0Lj+8zXXK/RQ/Xb8A3voQ8Ph209jertMEYxCzaHd5
+  +cfPc9LZy9MNZY8WAwteQi4CNOQV0aPEE5bnMkoAkFjYfIpFFknFZ947EmmMPyvk
+  g5TJxbAHoPcV7UzjlauU4YDZY3pj5bRIRLrzKwwLZNrpBahOs+nhTGEHAtFKtnCP
+  kc83Pc0FYYKi81E/hqCWfXsxu4JRZ+nRWok3CYTjJGx3nMJUowYX
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  MIIG5DCCBMygAwIBAgIQBHuLbQmxZWdCqKfBhpyfqjANBgkqhkiG9w0BAQwFADCB
+  iDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0pl
+  cnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNUIE5ldHdvcmsxLjAsBgNV
+  BAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMjAw
+  MjE4MDAwMDAwWhcNMzMwNTAxMjM1OTU5WjBEMQswCQYDVQQGEwJOTDEZMBcGA1UE
+  ChMQR0VBTlQgVmVyZW5pZ2luZzEaMBgGA1UEAxMRR0VBTlQgRVYgUlNBIENBIDQw
+  ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCfQj5WwXIGcoT7zvITdpnR
+  8P7auxwyAmBFjTtOksiLjlXP62wum102dz70U1cvdWnrK3e32SyVHIvVVJRIeUIl
+  q9cRj38gd/4t/e2etn+tpHUtL9wK5AIXs9tpIjEnw4UlcpLsVpLEiyc1Sc2XtwbC
+  or7MMrOB4qVucNPF+GQHWi/Vnss5zLVzXlfuJ7A5Efx1lSeWvMkNDdHxxuv62yYs
+  j+FEiY1IXjV1WyWxTlseJcazDUciw7LMK30Tp9smdONuPX6rwEVSTUiC3QzbwNaP
+  4C1Um2yAEbdve4Ru/qURloHud5LkBaJTm2+MDJz+yHZf4g7lvKpbcKrf59Jg8h02
+  sRipT6GA3cjpgB5RU5bnXFkn4kpT2+/P25HQFeg0lyKw8dFm864sn8a37GrWviOC
+  TOCWtrrSxtvLvCy9axxgc9btrA596rMKrw2tpp42KPPRXHjaVqfLf6Wj2SCynFWx
+  +insGBIikpbxxOdrt4qGEDgVdSOCN9f3b6CgyTs7PD5KlUiei05Cg7sbX/Zi9DE0
+  8782f4SGsZtyn4G/rMIqxyZ8SfyQZV17c+zNkttdy93iQv+IlNJGalCM56Mmkv5n
+  gRtWJXzk0stw30tVWdRSGlRVxxScfcwEF1GcfVjuyosTSnEju61Qi9N5WvhqitIX
+  J/wLzkppJc77xbQX+5tinwIDAQABo4IBizCCAYcwHwYDVR0jBBgwFoAUU3m/Wqor
+  Ss9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFLYgDq6jy+lVAwYTZtSsvieQVGDzMA4G
+  A1UdDwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsG
+  AQUFBwMBBggrBgEFBQcDAjA4BgNVHSAEMTAvMC0GBFUdIAAwJTAjBggrBgEFBQcC
+  ARYXaHR0cHM6Ly9zZWN0aWdvLmNvbS9DUFMwUAYDVR0fBEkwRzBFoEOgQYY/aHR0
+  cDovL2NybC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25B
+  dXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDov
+  L2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0EuY3J0MCUG
+  CCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEB
+  DAUAA4ICAQAmUg8HhUdEzgbJQrk3G7JLuFyKJHWQ74FRHMFCorKd+h9TXoxSBOAo
+  PZU5iIKv/mPXyhT+sh75NvlXr/N+d52Tx2HIY3IYWx82I0uaa0/tPKImL6ByJuqu
+  mcvb2c4MqCfTGAi8kILbQt3WHK/idEiG2APMlq1YNoR3aBh7tc1rloxmQ5joEmrj
+  wSoNA60AV2w9zEmi4KTYVZzsTjRgK8vh8WGQ4un3ZQhRYIVTdiI1J63kohIcpFTe
+  fJyz9ip3C1Rjr5kink4bGlcxpRb1WjEs3OWhzCJSo7/ZZIIZu0pRsDKltkpNmoUQ
+  5/4aIAEG9a9azLTKxTktcKOEJCOzdVIhNC/b6jrCFD7vR9v/dTI8zX9Ol1cK2nms
+  k/uD5CZcvMZ6Rh/D7AS7B8dWODbN3nQPzucgdION4KHvJJe1G2SxDe+5MQO4CbwI
+  WI5U+OnxKTP3vlJv2CxvP/+4Drf3hkp7YvVSZnmc9KlOeDvdC3Om9jNSw3njrEde
+  foNq1eeeV89hCWKKdn05kpyitOiy7pTJJuDgVs64YGaSdQZG0E4m1bMSo13cQxYg
+  J6EY3nagUJyiLzdMNuhbKlj2oXxjGLgUXYJJgSnnjqK7ldTbJDXK/qVX0gQSOr1b
+  72T77sRtDcLsmkh7hYi6a+QwKARgmMLZjDirRS6ovWtH60yG2rkxBw==
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  MIIF3jCCA8agAwIBAgIQAf1tMPyjylGoG7xkDjUDLTANBgkqhkiG9w0BAQwFADCB
+  iDELMAkGA1UEBhMCVVMxEzARBgNVBAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0pl
+  cnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNUIE5ldHdvcmsxLjAsBgNV
+  BAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMTAw
+  MjAxMDAwMDAwWhcNMzgwMTE4MjM1OTU5WjCBiDELMAkGA1UEBhMCVVMxEzARBgNV
+  BAgTCk5ldyBKZXJzZXkxFDASBgNVBAcTC0plcnNleSBDaXR5MR4wHAYDVQQKExVU
+  aGUgVVNFUlRSVVNUIE5ldHdvcmsxLjAsBgNVBAMTJVVTRVJUcnVzdCBSU0EgQ2Vy
+  dGlmaWNhdGlvbiBBdXRob3JpdHkwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIK
+  AoICAQCAEmUXNg7D2wiz0KxXDXbtzSfTTK1Qg2HiqiBNCS1kCdzOiZ/MPans9s/B
+  3PHTsdZ7NygRK0faOca8Ohm0X6a9fZ2jY0K2dvKpOyuR+OJv0OwWIJAJPuLodMkY
+  tJHUYmTbf6MG8YgYapAiPLz+E/CHFHv25B+O1ORRxhFnRghRy4YUVD+8M/5+bJz/
+  Fp0YvVGONaanZshyZ9shZrHUm3gDwFA66Mzw3LyeTP6vBZY1H1dat//O+T23LLb2
+  VN3I5xI6Ta5MirdcmrS3ID3KfyI0rn47aGYBROcBTkZTmzNg95S+UzeQc0PzMsNT
+  79uq/nROacdrjGCT3sTHDN/hMq7MkztReJVni+49Vv4M0GkPGw/zJSZrM233bkf6
+  c0Plfg6lZrEpfDKEY1WJxA3Bk1QwGROs0303p+tdOmw1XNtB1xLaqUkL39iAigmT
+  Yo61Zs8liM2EuLE/pDkP2QKe6xJMlXzzawWpXhaDzLhn4ugTncxbgtNMs+1b/97l
+  c6wjOy0AvzVVdAlJ2ElYGn+SNuZRkg7zJn0cTRe8yexDJtC/QV9AqURE9JnnV4ee
+  UB9XVKg+/XRjL7FQZQnmWEIuQxpMtPAlR1n6BB6T1CZGSlCBst6+eLf8ZxXhyVeE
+  Hg9j1uliutZfVS7qXMYoCAQlObgOK6nyTJccBz8NUvXt7y+CDwIDAQABo0IwQDAd
+  BgNVHQ4EFgQUU3m/WqorSs9UgOHYm8Cd8rIDZsswDgYDVR0PAQH/BAQDAgEGMA8G
+  A1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcNAQEMBQADggIBAFzUfA3P9wF9QZllDHPF
+  Up/L+M+ZBn8b2kMVn54CVVeWFPFSPCeHlCjtHzoBN6J2/FNQwISbxmtOuowhT6KO
+  VWKR82kV2LyI48SqC/3vqOlLVSoGIG1VeCkZ7l8wXEskEVX/JJpuXior7gtNn3/3
+  ATiUFJVDBwn7YKnuHKsSjKCaXqeYalltiz8I+8jRRa8YFWSQEg9zKC7F4iRO/Fjs
+  8PRF/iKz6y+O0tlFYQXBl2+odnKPi4w2r78NBc5xjeambx9spnFixdjQg3IM8WcR
+  iQycE0xyNN+81XHfqnHd4blsjDwSXWXavVcStkNr/+XeTWYRUc+ZruwXtuhxkYze
+  Sf7dNXGiFSeUHM9h4ya7b6NnJSFd5t0dCy5oGzuCr+yDZ4XUmFF0sbmZgIn/f3gZ
+  XHlKYC6SQK5MNyosycdiyA5d9zZbyuAlJQG03RoHnHcAP9Dc1ew91Pq7P8yF1m9/
+  qS3fuQL39ZeatTXaw2ewh0qpKJ4jjv9cJ2vhsE/zB+4ALtRZh8tSQZXq9EfX7mRB
+  VXyNWQKV3WKdwrnuWih0hKWbt5DHDAff9Yk2dDLWKMGwsAvgnEzDHNb842m1R0aB
+  L6KCq9NjRHDEjf8tM7qtj3u1cIiuPhnPQCjY/MiQu12ZIvVS5ljFH4gxQ+6IHdfG
+  jjxDah2nGN59PRbxYvnKkKj9
+  -----END CERTIFICATE-----
+
+# The name of the cloud to use from the specified clouds.yaml
+cloudName: openstack
+
+# Values for the Kubernetes cluster network
+kubeNetwork:
+  # By default, use the private network range 10.0.0.0/12 for the cluster network
+  # We split it into two equally-sized blocks for pods and services
+  # This gives ~500,000 addresses in each block and distinguishes it from
+  # internal net on 172.16.x.y
+  pods:
+    cidrBlocks:
+      - 10.0.0.0/12
+  services:
+    cidrBlocks:
+      - 10.7.0.0/13
+  serviceDomain: cluster.local
+
+# Settings for the OpenStack networking for the cluster
+clusterNetworking:
+  # Custom nameservers to use for the hosts
+  dnsNameservers:
+    - 130.246.209.132
+    - 130.246.209.163
+    - 130.246.208.220
+  externalNetworkId: External
+
+# Settings for registry mirrors
+registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
+
+# List of additional packages to install on cluster nodes
+additionalPackages: [nfs-common, open-iscsi]
+
+# Settings for the Kubernetes API server
+apiServer:
+  # Indicates whether to deploy a load balancer for the API server
+  enableLoadBalancer: true
+  # Indicates whether to associate a floating IP with the API server
+  associateFloatingIP: true
+  # The port to use for the API server
+  port: 6443

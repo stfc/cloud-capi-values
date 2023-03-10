@@ -21,7 +21,7 @@ nodeGroupDefaults:
   # Indicates if the node group should be autoscaled
   autoscale: false
   # The flavor to use for machines in the node group
-  machineFlavor: l3.nano
+  machineFlavor: l3.small
 
   healthCheck:
     # Indicates if the machine health check should be enabled

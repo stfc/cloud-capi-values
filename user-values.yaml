@@ -6,7 +6,8 @@ machineSSHKeyName:
 # This is required, a user can pre-allocate a floating IP and set it here
 # to be used by the cluster. If this is not set, a new floating IP will be
 # allocated for the cluster each time it is created and clusters cannot .
-floatingIP:
+apiServer:
+  floatingIP:
 
 # --------------------------- Optional Values -------------------------
 

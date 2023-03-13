@@ -1,8 +1,4 @@
 global:
-  # The prefix to use for images
-  # UKRI policy dictates this should be a policy compliant image
-  imagePrefix: harbor.stfc.ac.uk/stfc-cloud/
-
 # The PEM-encoded CA certificate for openstack.stfc.ac.uk
 # this expires 2023-12-05T23:59:59Z (UTC)
 # This allows a user to skip adding verify: false

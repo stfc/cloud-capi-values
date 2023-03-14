@@ -24,7 +24,7 @@ controlPlane:
 # and will be automatically updated by us
 kubernetesVersion: "1.23.15"
 # The name of the image to use for cluster machines
-machineImage: capi-ubuntu-2004-kube-v1.23.15
+machineImage: capi-ubuntu-2004-kube-v1.23.15-2023-03-14
 
 # Settings for node-level registry auth if using a private registry
 registryAuth:

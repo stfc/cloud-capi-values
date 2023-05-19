@@ -170,3 +170,10 @@ apiServer:
   associateFloatingIP: true
   # The port to use for the API server
   port: 6443
+
+addons:
+  # Enable monitoring by default, this deploys
+  # https://github.com/stackhpc/capi-helm-charts/blob/main/charts/cluster-addons/README.md#monitoring-and-logging
+  # and includes Loki which is required for central logging as per UKRI policy
+  monitoring:
+    enabled: true

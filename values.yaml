@@ -1,4 +1,3 @@
-global:
 # The PEM-encoded CA certificate for openstack.stfc.ac.uk
 # this expires 2023-12-05T23:59:59Z (UTC)
 # This allows a user to skip adding verify: false

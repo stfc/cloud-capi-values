@@ -176,3 +176,8 @@ addons:
   # and includes Loki which is required for central logging as per UKRI policy
   monitoring:
     enabled: true
+  # set availabilty zone as upstream uses nova by default
+  openstack:
+    csiCinder:
+      storageClass:
+        availabilityZone: ceph

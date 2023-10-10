@@ -6,6 +6,8 @@ apiServer:
   floatingIP: ""
 
 # --------------------------- Optional Values -------------------------
+# List of comma separated additional packages to install on cluster nodes
+additionalPackages: []
 
 controlPlane:
   # The number of control plane machines to deploy

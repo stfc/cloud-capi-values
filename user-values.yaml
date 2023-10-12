@@ -1,15 +1,13 @@
 # ===================== Mandatory Values =======================
-# The name of the SSH key to inject into cluster machines, this can be
-# left blank if a user does not require SSH access to the machines
-machineSSHKeyName:
-
 # This is required, a user can pre-allocate a floating IP and set it here
 # to be used by the cluster. If this is not set, a new floating IP will be
 # allocated for the cluster each time it is created and clusters cannot .
 apiServer:
-  floatingIP:
+  floatingIP: ""
 
 # --------------------------- Optional Values -------------------------
+# List of comma separated additional packages to install on cluster nodes
+additionalPackages: []
 
 controlPlane:
   # The number of control plane machines to deploy
@@ -32,3 +30,7 @@ registryAuth:
   # registry-1.docker.io:
   #   username: "<username>"
   #   password: "<password>"
+
+# The name of the SSH key to inject into cluster machines, this can be
+# left blank if a user does not require SSH access to the machines
+machineSSHKeyName:

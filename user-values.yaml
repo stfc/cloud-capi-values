@@ -13,16 +13,16 @@ controlPlane:
   # The number of control plane machines to deploy
   # For high-availability, this should be greater than 1
   # For etcd quorum, it should be odd - usually 3, or 5 for very large clusters
-  machineCount: 3
+  machineCount: 5
   # The flavor to use for control plane machines
   machineFlavor: l3.nano
 
 # The Kubernetes version of the cluster
 # This should match the version of kubelet and kubeadm in the image
 # and will be automatically updated by us
-kubernetesVersion: "1.24.11"
+kubernetesVersion: "1.27.7"
 # The name of the image to use for cluster machines
-machineImage: capi-ubuntu-2004-kube-v1.24.11-2023-05-18
+machineImage: "capi-ubuntu-2004-kube-v1.27.7-2023-11-01"
 
 # Settings for node-level registry auth if using a private registry
 registryAuth:

@@ -6,7 +6,7 @@ nodeGroups:
     # and is enabled by default
     name: default-md-0
     # The number of machines in the node group if autoscale is false
-    machineCount: 3
+    machineCount: 2
 
   # The following node groups are optional and can be enabled by uncommenting them
   # - name: md-l3-small

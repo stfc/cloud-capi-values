@@ -13,7 +13,7 @@ controlPlane:
   # The number of control plane machines to deploy
   # For high-availability, this should be greater than 1
   # For etcd quorum, it should be odd - usually 3, or 5 for very large clusters
-  machineCount: 3
+  machineCount: 5
   # The flavor to use for control plane machines
   machineFlavor: l3.nano
 

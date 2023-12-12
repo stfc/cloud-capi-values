@@ -24,6 +24,19 @@ kubernetesVersion: "1.27.7"
 # The name of the image to use for cluster machines
 machineImage: "capi-ubuntu-2004-kube-v1.27.7-2023-11-01"
 
+addons:
+  # Ingress is preferred, as it allows you to use DNS to locate multiple
+  # services behind a single FIP, and makes TLS trivial
+  # see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/309854262/CAPI+Ingress
+  ingress:
+    enabled: false
+    nginx:
+      release:
+        values:
+          controller:
+            service:
+              loadBalancerIP: # "130.x.y.z"
+
 # Settings for node-level registry auth if using a private registry
 registryAuth:
   {}

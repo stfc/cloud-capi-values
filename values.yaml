@@ -176,5 +176,5 @@ addons:
   # set availabilty zone as upstream uses nova by default
   openstack:
     csiCinder:
-      storageClass:
+      defaultStorageClass:
         availabilityZone: ceph

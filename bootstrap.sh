@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLUSTER_CTL_VERSION="v1.6.1"
-CAPO_ADDON_VERSION="0.3.1"
+CLUSTER_CTL_VERSION="v1.6.2"
+CAPO_ADDON_VERSION="0.5.0"
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then

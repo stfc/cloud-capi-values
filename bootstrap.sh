@@ -31,7 +31,7 @@ sudo mv clusterctl /usr/local/bin/clusterctl
 # This has to be done after yq is installed
 if [ "$(yq -r '.clouds.openstack.auth.application_credential_id' clouds.yaml)" == "null" ]; then
     # Enforce the use of app creds
-    echo "Error: A app cred clouds.yaml file is required in the clouds.yaml file, normal creds are not supported"
+    echo "Error: An app cred clouds.yaml file is required in the clouds.yaml file, normal creds (i.e. those with passwords) are not supported"
     exit 1
 fi
 
@@ -68,3 +68,5 @@ helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider -
 
 
 echo "You are now ready to create a cluster following the remaining instructions..."
+echo "https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup"
+

@@ -20,9 +20,9 @@ controlPlane:
 # The Kubernetes version of the cluster
 # This should match the version of kubelet and kubeadm in the image
 # and will be automatically updated by us
-kubernetesVersion: "1.27.7"
+kubernetesVersion: "1.28.7"
 # The name of the image to use for cluster machines
-machineImage: "capi-ubuntu-2004-kube-v1.27.7-2023-11-01"
+machineImage: "capi-ubuntu-2004-kube-v1.28.7-2024-03-01"
 
 addons:
   # Ingress is preferred, as it allows you to use DNS to locate multiple

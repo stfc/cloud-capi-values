@@ -25,6 +25,11 @@ kubernetesVersion: "1.28.7"
 machineImage: "capi-ubuntu-2004-kube-v1.28.7-2024-03-01"
 
 addons:
+  # Monitoring sets up kube-prometheus-stack and loki-stack.
+  # Monitoring is disabled by default because of cinder issues
+  monitoring:
+    enabled: false
+
   # Ingress is preferred, as it allows you to use DNS to locate multiple
   # services behind a single FIP, and makes TLS trivial
   # see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/309854262/CAPI+Ingress

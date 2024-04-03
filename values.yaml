@@ -140,19 +140,14 @@ kubeNetwork:
   # internal net on 172.16.x.y
   pods:
     cidrBlocks:
-      - 10.0.0.0/12
+      - 10.0.0.0/13
   services:
     cidrBlocks:
-      - 10.7.0.0/13
+      - 10.8.0.0/13
   serviceDomain: cluster.local
 
 # Settings for the OpenStack networking for the cluster
 clusterNetworking:
-  # Custom nameservers to use for the hosts
-  dnsNameservers:
-    - 130.246.209.132
-    - 130.246.209.163
-    - 130.246.208.220
   externalNetworkId: External
 
 # Settings for registry mirrors

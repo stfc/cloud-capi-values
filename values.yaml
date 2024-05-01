@@ -146,10 +146,6 @@ kubeNetwork:
       - 10.8.0.0/13
   serviceDomain: cluster.local
 
-# Settings for the OpenStack networking for the cluster
-clusterNetworking:
-  externalNetworkId: External
-
 # Settings for registry mirrors
 registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
 

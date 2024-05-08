@@ -43,13 +43,6 @@ if [ "$(yq -r '.clouds.openstack.auth.project_id' clouds.yaml)" == "null" ]; the
     injected_id=$PROJECT_ID yq e '.clouds.openstack.auth.project_id = env(injected_id)' -i clouds.yaml
 fi
 
-if [ "$(yq -r '.clusterNetworking.externalNetworkId' values.yaml)" == "null" ]; then
-    echo "Looking up External network_id for values.yaml..."
-    NETWORK_ID=$(openstack --os-cloud openstack network show External -c id -f value)
-    echo "Injecting Network ID: '${NETWORK_ID}' into values.yaml..."
-    injected_id=$NETWORK_ID yq e '.clusterNetworking.externalNetworkId = env(injected_id)' -i values.yaml
-fi
-
 echo "Installing and starting microk8s..."
 sudo snap install microk8s --classic
 sudo microk8s status --wait-ready

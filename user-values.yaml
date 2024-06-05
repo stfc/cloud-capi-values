@@ -17,6 +17,11 @@ controlPlane:
   # The flavor to use for control plane machines
   machineFlavor: l3.nano
 
+  # defaults cause OutofSync issues in argocd
+  remediationStrategy:
+    retryPeriod: 20m0s
+    minHealthyPeriod: 1h0m0s
+
 # The Kubernetes version of the cluster
 # This should match the version of kubelet and kubeadm in the image
 # and will be automatically updated by us

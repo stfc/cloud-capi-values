@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLUSTER_CTL_VERSION="v1.7.1"
+CLUSTER_CTL_VERSION="v1.7.4"
+CAPO_PROVIDER_VERSION="v0.10.4"
 CAPO_ADDON_VERSION="0.5.6"
 
 # Check a clouds.yaml file exists in the same directory as the script
@@ -57,7 +58,7 @@ sudo microk8s enable dns
 
 echo "Initialising cluster-api OpenStack provider..."
 echo "If this fails you may need a GITHUB_TOKEN, see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup for details"
-clusterctl init --infrastructure=openstack:v0.9.0
+clusterctl init --infrastructure=openstack:${CAPO_PROVIDER_VERSION}
 
 
 echo "Importing required helm repos and packages"

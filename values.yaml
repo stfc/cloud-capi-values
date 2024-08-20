@@ -169,3 +169,27 @@ addons:
     csiCinder:
       defaultStorageClass:
         availabilityZone: ceph
+
+  cni:
+    enabled: true
+    type: calico
+    calico:
+      chart:
+        repo: https://projectcalico.docs.tigera.io/charts
+        name: tigera-operator
+        version: v3.27.3
+      release:
+        namespace: tigera-operator
+        values: {}
+    globalNetworkPolicy:
+      denNamespaceSelector: kubernetes.io/metadata.name != 'openstack-system'
+      allowPriority: 20
+      denyPriority: 10
+      allowEgressCidrs:
+        - "0.0.0.0/0"
+      denyEgressCidrs:
+        - "169.254.169.254/32"
+      allowv6EgressCidrs:
+        - "::/0"
+      denyv6EgressCidrs:
+        - "fe80::a9fe:a9fe/128"

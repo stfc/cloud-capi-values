@@ -3,7 +3,7 @@ set -euo pipefail
 
 CLUSTER_CTL_VERSION="v1.7.4"
 CAPO_PROVIDER_VERSION="v0.10.4"
-CAPO_ADDON_VERSION="0.5.6"
+CAPO_ADDON_VERSION="0.5.9"
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then
@@ -62,8 +62,8 @@ clusterctl init --infrastructure=openstack:${CAPO_PROVIDER_VERSION}
 
 
 echo "Importing required helm repos and packages"
-helm repo add capi https://stackhpc.github.io/capi-helm-charts
-helm repo add capi-addons https://stackhpc.github.io/cluster-api-addon-provider
+helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
+helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
 helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${CAPO_ADDON_VERSION}"
 

@@ -148,7 +148,7 @@ kubeNetwork:
 
 clusterNetworking:
   internalNetwork: 
-    nodeCidr: 192.168.0.0/16 
+    nodeCidr: 192.168.128.0/17
 
 # Settings for registry mirrors
 registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }

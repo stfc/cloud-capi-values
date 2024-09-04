@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLUSTER_CTL_VERSION="v1.7.4"
+CLUSTER_CTL_VERSION="v1.8.1"
 CAPO_PROVIDER_VERSION="v0.10.4"
 CAPO_ADDON_VERSION="0.5.9"
 

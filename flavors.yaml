@@ -28,7 +28,7 @@ nodeGroupDefaults:
     enabled: true
     # The spec for the health check
     spec:
-      # By default, unhealthy worker nodes are always remediated
+      # By default, 20% unhealthy worker nodes remediated at a time
       maxUnhealthy: 20%
       # If a node takes longer than 10 mins to startup, remediate it
       nodeStartupTimeout: 10m0s
@@ -37,7 +37,7 @@ nodeGroupDefaults:
       unhealthyConditions:
         - type: Ready
           status: Unknown
-          timeout: 5m0s
+          timeout: 10m0s
         - type: Ready
           status: "False"
-          timeout: 5m0s
+          timeout: 10m0s

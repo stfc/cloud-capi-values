@@ -28,8 +28,9 @@ nodeGroupDefaults:
     enabled: true
     # The spec for the health check
     spec:
-      # By default, unhealthy worker nodes are always remediated
-      maxUnhealthy: 100%
+      # By default, 20% unhealthy worker nodes remediated at a time
+      # https://cluster-api.sigs.k8s.io/tasks/automated-machine-management/healthchecking#max-unhealthy
+      maxUnhealthy: 20%
       # If a node takes longer than 10 mins to startup, remediate it
       nodeStartupTimeout: 10m0s
       # By default, consider a worker node that has not been Ready for
@@ -37,7 +38,7 @@ nodeGroupDefaults:
       unhealthyConditions:
         - type: Ready
           status: Unknown
-          timeout: 5m0s
+          timeout: 10m0s
         - type: Ready
           status: "False"
-          timeout: 5m0s
+          timeout: 10m0s

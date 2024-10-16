@@ -1,5 +1,5 @@
 {
-    "capo-addon-version": "0.5.9",
-    "capo-provider-version": "v0.10.4",
+    "capo-addon-version": "0.7.0",
+    "capo-provider-version": "v0.10.5",
     "cluster-ctl-version": "v1.8.1"
 }

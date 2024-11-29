@@ -1,9 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLUSTER_CTL_VERSION="v1.8.1"
-CAPO_PROVIDER_VERSION="v0.10.4"
-CAPO_ADDON_VERSION="0.5.9"
+# Function to convert dependencies to a valid environment variables
+sanitize_var_name() {
+    echo "$1" | tr '-' '_' | tr '[:lower:]' '[:upper:]'
+}
+
+# Read in dependencies.json file
+set_env_vars() {
+    local json_file="$1"
+    
+    # Check if jq is installed
+    if ! command -v jq &> /dev/null; then
+        echo "Error: jq is not installed. Please install jq to parse JSON."
+        exit 1
+    fi
+    
+    # Read each key-value pair from the JSON file
+    jq -r 'to_entries[] | .key + "=" + .value' "$json_file" | while IFS='=' read -r key value; do
+        # Sanitize the key to create a valid environment variable name
+        env_var=$(sanitize_var_name "$key")
+        
+        # Set the environment variable
+        export "$env_var"="$value"
+        echo "Set $env_var=$value"
+    done
+}
+
+# Set environment variables from dependencies.json
+set_env_vars "dependencies.json"
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then
@@ -65,7 +90,7 @@ echo "Importing required helm repos and packages"
 helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
-helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${CAPO_ADDON_VERSION}"
+helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${AZIMUTH_CAPO_ADDON_VERSION}"
 
 
 echo "You are now ready to create a cluster following the remaining instructions..."

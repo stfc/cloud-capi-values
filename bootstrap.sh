@@ -17,14 +17,14 @@ set_env_vars() {
     fi
     
     # Read each key-value pair from the JSON file
-    jq -r 'to_entries[] | .key + "=" + .value' "$json_file" | while IFS='=' read -r key value; do
+    while IFS='=' read -r key value; do
         # Sanitize the key to create a valid environment variable name
         env_var=$(sanitize_var_name "$key")
         
         # Set the environment variable
         export "$env_var"="$value"
         echo "Set $env_var=$value"
-    done
+    done < <(jq -r 'to_entries[] | .key + "=" + .value' "$json_file")
 }
 
 # Set environment variables from dependencies.json

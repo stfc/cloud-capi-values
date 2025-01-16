@@ -144,7 +144,14 @@ clusterNetworking:
     nodeCidr: 192.168.128.0/17
 
 # Settings for registry mirrors
-registryMirrors: { docker.io: ["https://dockerhub.stfc.ac.uk"] }
+registryMirrors:
+  docker.io:
+     - https://dockerhub.stfc.ac.uk
+  # Upstream points these to their own mirror, null it out to prevent issues with private containers
+  ghcr.io: null
+  nvcr.io: null
+  quay.io: null
+  registry.k8s.io: null
 
 # Settings for the Kubernetes API server
 apiServer:

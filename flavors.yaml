@@ -2,6 +2,7 @@
 
 # The worker node groups for the cluster
 nodeGroups:
+  # names of node groups need to be a valid hostname, not an fqdn (e.g _ or . cannot be in the name)
   - # This group uses details found in nodeGroupDefault below
     # and is enabled by default
     name: default-md-0

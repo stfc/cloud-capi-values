@@ -25,9 +25,9 @@ controlPlane:
 # The Kubernetes version of the cluster
 # This should match the version of kubelet and kubeadm in the image
 # and will be automatically updated by us
-kubernetesVersion: "1.30.6"
+kubernetesVersion: "1.30.8"
 # The name of the image to use for cluster machines
-machineImage: "capi-ubuntu-2204-kube-v1.30.6-2024-11-15"
+machineImage: "capi-ubuntu-2204-kube-v1.30.8-2025-01-24"
 
 addons:
   # Monitoring sets up kube-prometheus-stack and loki-stack.

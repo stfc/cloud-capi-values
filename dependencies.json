@@ -1,5 +1,5 @@
 {
-    "azimuth-capo-addon-version": "0.8.0",
-    "capo-provider-version": "v0.10.5",
-    "cluster-ctl-version": "v1.8.1"
+    "azimuth-capo-addon-version": "0.8.2",
+    "capo-provider-version": "v0.11.5",
+    "cluster-ctl-version": "v1.10.1"
 }

@@ -45,6 +45,16 @@ addons:
         values:
           controller:
             service:
+              annotations: 
+                # Don't delete the floating ip when deleting loadbalancers
+                # prevents errors when deleting clusters, leave as true
+                loadbalancer.openstack.org/keep-floatingip: true
+                # Set loadbalancing method: ROUND_ROBIN, LEAST_CONNECTIONS, SOURCE_IP, SOURCE_IP_PORT
+                loadbalancer.openstack.org/lb-method: ROUND_ROBIN
+                # Client inactivity timeout in milliseconds
+                loadbalancer.openstack.org/timeout-client-data: 60000
+                # Set true to enable X-Forwarded-For Headers for HTTP
+                loadbalancer.openstack.org/x-forwarded-for: false
               loadBalancerIP: # "130.x.y.z"
 
 # Settings for node-level registry auth if using a private registry

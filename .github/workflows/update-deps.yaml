@@ -88,4 +88,3 @@ jobs:
           ---
           ## Description of the changes
           This PR updates the dependencies.json to match upstream and sets the latest capi chart.
-          :warning: We should update our docs before merging [here](https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup) :warning:

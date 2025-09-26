@@ -1,0 +1,90 @@
+    
+name: Sync Dependencies with upstream
+
+on:
+  schedule:
+    - cron: '0 12 * * 1-5' # run every working day at 12pm UTC
+  # Allow manual executions
+  workflow_dispatch: 
+
+env:
+  author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
+
+jobs:
+  get-upstream-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v4
+    
+    - name: Download Upstream Depenendency File
+      id: download
+      run: |
+        
+        # Create source URL for raw file
+        SOURCE_URL="https://raw.githubusercontent.com/azimuth-cloud/capi-helm-charts/refs/heads/main/dependencies.json"
+        HTTP_STATUS=$(curl -s -w "%{http_code}" -o /tmp/upstream_deps.json "$SOURCE_URL")
+        
+        if [ "$HTTP_STATUS" -eq 200 ]; then
+          echo "File downloaded successfully"
+          echo "success=true" >> $GITHUB_OUTPUT
+        else
+          echo "Failed to download file. HTTP status: $HTTP_STATUS"
+          echo "success=false" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+
+    - name: Get latest upstream chart version
+      id: capi-helm-chart
+      uses: azimuth-cloud/github-actions/helm-latest-version@master
+      with: 
+        repository: "https://azimuth-cloud.github.io/capi-helm-charts"
+        chart: "openstack-cluster"
+
+    - name: "Append latest helm chart version"
+      id: append-version
+      run: |
+        jq '.["cluster-chart"] = "${{ steps.capi-helm-chart.outputs.version }}"' /tmp/upstream_deps.json > /tmp/dependencies.json        
+        
+
+    - name: Check if file changed
+      id: check-changes
+      run: |
+        if [ -f "/tmp/dependencies.json" ] && [ -s "/tmp/dependencies.json" ]; then
+          if cmp -s /tmp/dependencies.json dependencies.json; then
+            echo "File unchanged"
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "File changed"
+            mv /tmp/dependencies.json dependencies.json
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "Something went wrong.. Aborting."
+          echo "changed=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: "Create Pull Request for updating dependencies"
+      if: ${{ steps.check-changes.outputs.changed }}
+      id: make-pr
+      uses: peter-evans/create-pull-request@v5
+      env:
+        pr-title: "Update Build Dependencies to match upstream"
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: ${{ env.pr-title }}
+        author: ${{ env.author }}
+        committer: ${{ env.author }}
+        branch: "deps-autoupdate"
+        delete-branch: true
+        title: ${{ env.pr-title }}
+        labels: |
+          automated
+          dependency-update
+        body: |
+          :robot: I have updated the dependencies.json file *beep* *boop*
+          ---
+          ## Description of the changes
+          This PR updates the dependencies.json to match upstream and sets the latest capi chart.

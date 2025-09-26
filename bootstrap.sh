@@ -9,18 +9,18 @@ sanitize_var_name() {
 # Read in dependencies.json file
 set_env_vars() {
     local json_file="$1"
-    
+
     # Check if jq is installed
     if ! command -v jq &> /dev/null; then
         echo "Error: jq is not installed. Please install jq to parse JSON."
         exit 1
     fi
-    
+
     # Read each key-value pair from the JSON file
     while IFS='=' read -r key value; do
         # Sanitize the key to create a valid environment variable name
         env_var=$(sanitize_var_name "$key")
-        
+
         # Set the environment variable
         export "$env_var"="$value"
         echo "Set $env_var=$value"
@@ -49,7 +49,7 @@ sudo snap install kubectl --classic
 sudo snap install helm --classic
 sudo snap install yq
 
-curl --no-progress-meter -L "https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_CTL_VERSION}/clusterctl-linux-amd64" -o clusterctl
+curl --no-progress-meter -L "https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API}/clusterctl-linux-amd64" -o clusterctl
 chmod +x clusterctl
 sudo mv clusterctl /usr/local/bin/clusterctl
 
@@ -80,19 +80,20 @@ sudo chown $USER ~/.kube/config
 sudo chmod 600 ~/.kube/config
 sudo microk8s enable dns
 
-
 echo "Initialising cluster-api OpenStack provider..."
 echo "If this fails you may need a GITHUB_TOKEN, see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup for details"
-clusterctl init --infrastructure=openstack:${CAPO_PROVIDER_VERSION}
-
+clusterctl init --infrastructure=openstack:${CLUSTER_API_PROVIDER_OPENSTACK}
 
 echo "Importing required helm repos and packages"
 helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
-helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${AZIMUTH_CAPO_ADDON_VERSION}"
+helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_PROVIDER}"
 
+export ADDON_VERSION=$ADDON_PROVIDER
+export CAPO_PROVIDER_VERSION=$CLUSTER_API_PROVIDER_OPENSTACK
+export CAPI_HELM_CHART_VERSION=$CLUSTER_CHART
 
 echo "You are now ready to create a cluster following the remaining instructions..."
-echo "https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup"
 
+echo "https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup"

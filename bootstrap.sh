@@ -30,6 +30,10 @@ set_env_vars() {
 # Set environment variables from dependencies.json
 set_env_vars "dependencies.json"
 
+# Setting CERT_MANAGER causes issues when clusterctl init probes for it,
+# as unlike azimuth, we don't install it outselves
+unset CERT_MANAGER
+
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then
     echo "A clouds.yaml file is required in the same directory as this script"
@@ -40,7 +44,10 @@ echo "Updating system to apply latest security patches..."
 export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update -qq
 # Shut apt up, since it just blows up the logs
-sudo apt-get upgrade -y -qq > /dev/null
+# On dialogues about config file updates, keep current config file and use default choices
+sudo apt-get -o Dpkg::Options::="--force-confold" \
+             -o Dpkg::Options::="--force-confdef" \
+             -y -qq upgrade > /dev/null
 
 echo "Installing required tools..."
 sudo apt-get install -y snapd python3-openstackclient
@@ -49,7 +56,8 @@ sudo snap install kubectl --classic
 sudo snap install helm --classic
 sudo snap install yq
 
-curl --no-progress-meter -L "https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API}/clusterctl-linux-amd64" -o clusterctl
+echo "Installing clusterctl..."
+curl --progress-bar -L "https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API}/clusterctl-linux-amd64" -o clusterctl
 chmod +x clusterctl
 sudo mv clusterctl /usr/local/bin/clusterctl
 
@@ -75,6 +83,10 @@ sudo microk8s status --wait-ready
 
 echo "Exporting the kubeconfig file..."
 mkdir -p ~/.kube/
+echo "Backing up existing kubeconfig if it exists..."
+if [ -f "$HOME/.kube/config" ]; then 
+    mv -v "$HOME/.kube/config" "$HOME/.kube/config.bak"
+fi
 sudo microk8s.config  > ~/.kube/config
 sudo chown $USER ~/.kube/config
 sudo chmod 600 ~/.kube/config

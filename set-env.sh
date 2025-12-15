@@ -19,16 +19,20 @@ set_env_vars() {
         # Sanitize the key to create a valid environment variable name
         env_var=$(sanitize_var_name "$key")
 
-        # Set the environment variable
-        export "$env_var"="$value"
-        echo "Set $env_var=$value"
+        # Set the environment variable without exporting it to current shell
+        printf -v "$env_var" '%s' "$value"
     done < <(jq -r 'to_entries[] | .key + "=" + .value' "$json_file")
 }
 
 # Set environment variables from dependencies.json
 set_env_vars "dependencies.json"
 
+# export just the values that we care about into the current session
 export ADDON_VERSION=$ADDON_PROVIDER
-export CAPO_PROVIDER_VERSION=$CLUSTER_API_PROVIDER_OPENSTACK
-export CAPI_HELM_CHART_VERSION=$CLUSTER_CHART
+echo "Set ADDON_VERSION=$ADDON_PROVIDER"
 
+export CAPO_PROVIDER_VERSION=$CLUSTER_API_PROVIDER_OPENSTACK
+echo "Set CAPO_PROVIDER_VERSION=$CLUSTER_API_PROVIDER_OPENSTACK"
+
+export CAPI_HELM_CHART_VERSION=$CLUSTER_CHART
+echo "Set CAPI_HELM_CHART_VERSION=$CLUSTER_CHART"

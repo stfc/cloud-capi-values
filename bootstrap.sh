@@ -87,7 +87,7 @@ echo "Backing up existing kubeconfig if it exists..."
 if [ -f "$HOME/.kube/config" ]; then 
     mv -v "$HOME/.kube/config" "$HOME/.kube/config.bak"
 fi
-sudo microk8s.config  > ~/.kube/config
+sudo microk8s.config | sudo tee ~/.kube/config
 sudo chown "$USER" ~/.kube/config
 sudo chmod 600 ~/.kube/config
 sudo microk8s enable dns

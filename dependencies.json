@@ -7,5 +7,6 @@
   "cert-manager": "v1.19.2",
   "helm": "v3.17.3",
   "sonobuoy": "v0.57.3",
-  "cluster-chart": "0.19.0"
+  "cluster-chart": "0.19.0",
+  "korc": "v2.3.0"
 }

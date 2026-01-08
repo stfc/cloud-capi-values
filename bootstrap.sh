@@ -101,6 +101,7 @@ helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
 helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_PROVIDER}"
+kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/${KORC}/install.yaml"
 
 echo "You are now ready to create a cluster following the remaining instructions..."
 

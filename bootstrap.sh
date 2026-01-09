@@ -72,7 +72,7 @@ fi
 if [ "$(yq -r '.clouds.openstack.auth.project_id' clouds.yaml)" == "null" ]; then
     echo "Looking up project_id for clouds.yaml..."
     APP_CRED_ID=$(yq -r '.clouds.openstack.auth.application_credential_id' clouds.yaml)
-    PROJECT_ID=$(openstack --os-cloud openstack application credential show ${APP_CRED_ID} -c project_id -f value)
+    PROJECT_ID="$(openstack --os-cloud openstack application credential show "${APP_CRED_ID}" -c project_id -f value)"
     echo "Injecting project ID: '${PROJECT_ID}' into clouds.yaml..."
     injected_id=$PROJECT_ID yq e '.clouds.openstack.auth.project_id = env(injected_id)' -i clouds.yaml
 fi
@@ -87,14 +87,14 @@ echo "Backing up existing kubeconfig if it exists..."
 if [ -f "$HOME/.kube/config" ]; then 
     mv -v "$HOME/.kube/config" "$HOME/.kube/config.bak"
 fi
-sudo microk8s.config  > ~/.kube/config
-sudo chown $USER ~/.kube/config
+sudo microk8s.config | sudo tee ~/.kube/config
+sudo chown "$USER" ~/.kube/config
 sudo chmod 600 ~/.kube/config
 sudo microk8s enable dns
 
 echo "Initialising cluster-api OpenStack provider..."
 echo "If this fails you may need a GITHUB_TOKEN, see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup for details"
-clusterctl init --infrastructure=openstack:${CLUSTER_API_PROVIDER_OPENSTACK}
+clusterctl init --infrastructure=openstack:"${CLUSTER_API_PROVIDER_OPENSTACK}"
 
 echo "Importing required helm repos and packages"
 helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts

@@ -1,38 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Function to convert dependencies to a valid environment variables
-sanitize_var_name() {
-    echo "$1" | tr '-' '_' | tr '[:lower:]' '[:upper:]'
-}
-
-# Read in dependencies.json file
-set_env_vars() {
-    local json_file="$1"
-
-    # Check if jq is installed
-    if ! command -v jq &> /dev/null; then
-        echo "Error: jq is not installed. Please install jq to parse JSON."
-        exit 1
-    fi
-
-    # Read each key-value pair from the JSON file
-    while IFS='=' read -r key value; do
-        # Sanitize the key to create a valid environment variable name
-        env_var=$(sanitize_var_name "$key")
-
-        # Set the environment variable
-        export "$env_var"="$value"
-        echo "Set $env_var=$value"
-    done < <(jq -r 'to_entries[] | .key + "=" + .value' "$json_file")
-}
-
-# Set environment variables from dependencies.json
-set_env_vars "dependencies.json"
-
-# Setting CERT_MANAGER causes issues when clusterctl init probes for it,
-# as unlike azimuth, we don't install it outselves
-unset CERT_MANAGER
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# loading environments
+source "$SCRIPT_DIR"/set-env.sh
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then
@@ -72,7 +43,7 @@ fi
 if [ "$(yq -r '.clouds.openstack.auth.project_id' clouds.yaml)" == "null" ]; then
     echo "Looking up project_id for clouds.yaml..."
     APP_CRED_ID=$(yq -r '.clouds.openstack.auth.application_credential_id' clouds.yaml)
-    PROJECT_ID="$(openstack --os-cloud openstack application credential show "${APP_CRED_ID}" -c project_id -f value)"
+    PROJECT_ID=$(openstack --os-cloud openstack application credential show "${APP_CRED_ID}" -c project_id -f value)
     echo "Injecting project ID: '${PROJECT_ID}' into clouds.yaml..."
     injected_id=$PROJECT_ID yq e '.clouds.openstack.auth.project_id = env(injected_id)' -i clouds.yaml
 fi
@@ -87,6 +58,7 @@ echo "Backing up existing kubeconfig if it exists..."
 if [ -f "$HOME/.kube/config" ]; then 
     mv -v "$HOME/.kube/config" "$HOME/.kube/config.bak"
 fi
+
 sudo microk8s.config | sudo tee ~/.kube/config
 sudo chown "$USER" ~/.kube/config
 sudo chmod 600 ~/.kube/config
@@ -101,7 +73,7 @@ helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
 helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_PROVIDER}"
-kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/${KORC}/install.yaml"
+kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/${K_ORC}/install.yaml"
 
 echo "You are now ready to create a cluster following the remaining instructions..."
 

@@ -140,13 +140,13 @@ kubeNetwork:
   serviceDomain: cluster.local
 
 clusterNetworking:
-  internalNetwork: 
+  internalNetwork:
     nodeCidr: 192.168.128.0/17
 
 # Settings for registry mirrors
 registryMirrors:
   docker.io:
-     - https://dockerhub.stfc.ac.uk
+    - https://dockerhub.stfc.ac.uk/v2/
   # Upstream points these to their own mirror, null it out to prevent issues with private containers
   ghcr.io: null
   nvcr.io: null

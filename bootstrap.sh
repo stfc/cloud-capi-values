@@ -43,7 +43,7 @@ fi
 if [ "$(yq -r '.clouds.openstack.auth.project_id' clouds.yaml)" == "null" ]; then
     echo "Looking up project_id for clouds.yaml..."
     APP_CRED_ID=$(yq -r '.clouds.openstack.auth.application_credential_id' clouds.yaml)
-    PROJECT_ID=$(openstack --os-cloud openstack application credential show "${APP_CRED_ID}" -c project_id -f value)
+    PROJECT_ID="$(openstack --os-cloud openstack application credential show "${APP_CRED_ID}" -c project_id -f value)"
     echo "Injecting project ID: '${PROJECT_ID}' into clouds.yaml..."
     injected_id=$PROJECT_ID yq e '.clouds.openstack.auth.project_id = env(injected_id)' -i clouds.yaml
 fi

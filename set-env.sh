@@ -42,15 +42,10 @@ fi
 
 # Download upstream dependencies.json 
 SOURCE_URL="https://raw.githubusercontent.com/azimuth-cloud/capi-helm-charts/refs/tags/${CLUSTER_CHART}/dependencies.json"
-DEST_URL="/tmp/upstream_deps.json"
+DEST_URL="${SCRIPT_DIR}/upstream_dependencies.json"
 
-HTTP_STATUS=$(curl -s -w "%{http_code}" -o "$DEST_URL" "$SOURCE_URL")
-if [ "$HTTP_STATUS" -eq 200 ]; then
-    echo "File downloaded successfully"
-else
-    echo "Failed to download file. HTTP status: $HTTP_STATUS"
-    exit 1
-fi
+curl -o "$DEST_URL" "$SOURCE_URL"
+echo "File downloaded successfully"
 
 ADDON_PROVIDER="NOT_SET"
 CLUSTER_API_PROVIDER_OPENSTACK="NOT_SET"

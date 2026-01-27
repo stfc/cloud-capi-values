@@ -24,6 +24,11 @@ set_env_vars() {
     done < <(jq -r 'to_entries[] | .key + "=" + .value' "$json_file")
 }
 
+ADDON_PROVIDER="NOT_SET"
+CLUSTER_API_PROVIDER_OPENSTACK="NOT_SET"
+CLUSTER_CHART="NOT_SET"
+K_ORC="NOT_SET"
+
 # Set environment variables from dependencies.json
 set_env_vars "dependencies.json"
 
@@ -36,3 +41,7 @@ echo "Set CAPO_PROVIDER_VERSION=$CLUSTER_API_PROVIDER_OPENSTACK"
 
 export CAPI_HELM_CHART_VERSION=$CLUSTER_CHART
 echo "Set CAPI_HELM_CHART_VERSION=$CLUSTER_CHART"
+
+export KORC=$K_ORC
+echo "Set KORC=$K_ORC"
+

@@ -23,6 +23,12 @@ set_env_vars() {
     done < <(jq -r 'to_entries[] | .key + "=" + .value' "$json_file")
 }
 
+ADDON_PROVIDER="NOT_SET"
+CLUSTER_API_PROVIDER_OPENSTACK="NOT_SET"
+CLUSTER_CHART="NOT_SET"
+K_ORC="NOT_SET"
+
+# read in dependencies.yaml file
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEP_FILE="${SCRIPT_DIR}/dependencies.yaml"
 # Read our dependencies.yaml and export env variables 
@@ -33,7 +39,7 @@ if [[ -f "$DEP_FILE" ]]; then
     env_var=$(sanitize_var_name "$key")
     # Export all our dependencies
     echo "$env_var=$value"
-    export "$env_var"="$value"
+    printf -v "$env_var" "%s" "$value"
   done < <(yq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$DEP_FILE")
 else
   echo "dependencies.yaml file not found: $DEP_FILE" >&2
@@ -46,11 +52,6 @@ DEST_URL="${SCRIPT_DIR}/upstream_dependencies.json"
 
 curl -o "$DEST_URL" "$SOURCE_URL"
 echo "File downloaded successfully"
-
-ADDON_PROVIDER="NOT_SET"
-CLUSTER_API_PROVIDER_OPENSTACK="NOT_SET"
-CLUSTER_CHART="NOT_SET"
-K_ORC="NOT_SET"
 
 # Set environment variables from dependencies.json
 set_env_vars "$DEST_URL"

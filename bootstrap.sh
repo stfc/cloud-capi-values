@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# loading environments
-source "$SCRIPT_DIR"/set-env.sh
-
-# Check a clouds.yaml file exists in the same directory as the script
-if [ ! -f clouds.yaml ]; then
-    echo "A clouds.yaml file is required in the same directory as this script"
-    exit 1
-fi
+echo "Installing required tools..."
+sudo apt-get install -y snapd python3-openstackclient
+export PATH=$PATH:/snap/bin
+sudo snap install kubectl --classic
+sudo snap install helm --classic
+sudo snap install yq
 
 echo "Updating system to apply latest security patches..."
 export DEBIAN_FRONTEND=noninteractive
@@ -20,12 +17,16 @@ sudo apt-get -o Dpkg::Options::="--force-confold" \
              -o Dpkg::Options::="--force-confdef" \
              -y -qq upgrade > /dev/null
 
-echo "Installing required tools..."
-sudo apt-get install -y snapd python3-openstackclient
-export PATH=$PATH:/snap/bin
-sudo snap install kubectl --classic
-sudo snap install helm --classic
-sudo snap install yq
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# loading environments
+source "$SCRIPT_DIR"/set-env.sh
+
+# Check a clouds.yaml file exists in the same directory as the script
+if [ ! -f clouds.yaml ]; then
+    echo "A clouds.yaml file is required in the same directory as this script"
+    exit 1
+fi
 
 echo "Installing clusterctl..."
 curl --progress-bar -L "https://github.com/kubernetes-sigs/cluster-api/releases/download/${CLUSTER_API}/clusterctl-linux-amd64" -o clusterctl
@@ -73,8 +74,10 @@ helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
 helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_PROVIDER}"
-kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/${KORC}/install.yaml"
+kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/v${KORC}/install.yaml"
 
+echo ""
+echo "=============================================================================="
 echo "You are now ready to create a cluster following the remaining instructions..."
-
 echo "https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup"
+echo "=============================================================================="

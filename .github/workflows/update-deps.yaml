@@ -16,25 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: "Setup Github Token"
+      uses: actions/create-github-app-token@v2
+      id: app-token
+      with:
+        app-id: ${{ vars.APP_ID }}
+        private-key: ${{ secrets.PRIVATE_KEY }}    
+
     - name: Checkout 
       uses: actions/checkout@v6
-    
-    - name: Download Upstream Depenendency File
-      id: download
-      run: |
-        
-        # Create source URL for raw file
-        SOURCE_URL="https://raw.githubusercontent.com/azimuth-cloud/capi-helm-charts/refs/heads/main/dependencies.json"
-        HTTP_STATUS=$(curl -s -w "%{http_code}" -o /tmp/upstream_deps.json "$SOURCE_URL")
-        
-        if [ "$HTTP_STATUS" -eq 200 ]; then
-          echo "File downloaded successfully"
-          echo "success=true" >> $GITHUB_OUTPUT
-        else
-          echo "Failed to download file. HTTP status: $HTTP_STATUS"
-          echo "success=false" >> $GITHUB_OUTPUT
-          exit 1
-        fi
 
     - name: Get latest upstream chart version
       id: capi-helm-chart
@@ -43,31 +34,29 @@ jobs:
         repository: "https://azimuth-cloud.github.io/capi-helm-charts"
         chart: "openstack-cluster"
 
-    - name: "Append latest helm chart version"
+    # TODO: once azimuth-cloud/capi-helm-charts provides their own pinned k-orc installation method, we pick up the latest version  
+    - name: "Get latest Openstack Resource Controller (K-orc) version"
+      id: get-k-orc-version
+      uses: pozetroninc/github-action-get-latest-release@master
+      with:
+        repository: k-orc/openstack-resource-controller
+        excludes: prerelease, draft
+        token: "${{ steps.app-token.outputs.token }}"
+
+    - name: Remove starting "v" for K-orc version
+      id: k-orc
+      run: |
+        TAG=${{ steps.get-k-orc-version.outputs.release }}
+        echo "release=${TAG#v}" >> $GITHUB_OUTPUT
+
+    - name: "Update dependencies.yaml"
       id: append-version
       run: |
-        jq '.["cluster-chart"] = "${{ steps.capi-helm-chart.outputs.version }}"' /tmp/upstream_deps.json > /tmp/dependencies.json        
-        
+        yq -i '.["cluster-chart"] = "${{ steps.capi-helm-chart.outputs.version }}"' dependencies.yaml
+        yq -i '.["k-orc"] = "${{ steps.k-orc.outputs.release }}"' dependencies.yaml
 
-    - name: Check if file changed
-      id: check-changes
-      run: |
-        if [ -f "/tmp/dependencies.json" ] && [ -s "/tmp/dependencies.json" ]; then
-          if cmp -s /tmp/dependencies.json dependencies.json; then
-            echo "File unchanged"
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "File changed"
-            mv /tmp/dependencies.json dependencies.json
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
-        else
-          echo "Something went wrong.. Aborting."
-          echo "changed=false" >> $GITHUB_OUTPUT
-        fi
 
-    - name: "Create Pull Request for updating dependencies"
-      if: ${{ steps.check-changes.outputs.changed }}
+    - name: "Create Pull Request for updating dependencies if changed"
       id: make-pr
       uses: peter-evans/create-pull-request@v8
       env:
@@ -84,7 +73,8 @@ jobs:
           automated
           dependency-update
         body: |
-          :robot: I have updated the dependencies.json file *beep* *boop*
+          :robot: I have updated the dependencies.yaml file *beep* *boop*
           ---
           ## Description of the changes
-          This PR updates the dependencies.json to match upstream and sets the latest capi chart.
+          This PR updates the dependencies.yaml to pull the latest versions. 
+          Please test this by creating a cluster with these values before merging

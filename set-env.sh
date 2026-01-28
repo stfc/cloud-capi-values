@@ -1,5 +1,8 @@
 #!/usr/bin/bash
-set -euo pipefail
+
+# This cannot "set -euo pipefail" as we source the environment
+# if we do this and run into any errors it will kill the user's
+# current shell (e.g. a typo)
 
 # Function to convert dependencies to a valid environment variables
 sanitize_var_name() {

@@ -17,11 +17,6 @@ sudo apt-get -o Dpkg::Options::="--force-confold" \
              -o Dpkg::Options::="--force-confdef" \
              -y -qq upgrade > /dev/null
 
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-# loading environments
-source "$SCRIPT_DIR"/set-env.sh
-
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then
     echo "A clouds.yaml file is required in the same directory as this script"

@@ -60,6 +60,9 @@ echo "File downloaded successfully"
 set_env_vars "$DEST_URL"
 
 # export just the values that we care about into the current session
+export CLUSTER_API=$CLUSTER_API
+echo "Set CLUSTER_API=$CLUSTER_API"
+
 export ADDON_VERSION=$ADDON_PROVIDER
 echo "Set ADDON_VERSION=$ADDON_PROVIDER"
 

@@ -51,7 +51,7 @@ sudo microk8s status --wait-ready
 echo "Exporting the kubeconfig file..."
 mkdir -p ~/.kube/
 echo "Backing up existing kubeconfig if it exists..."
-if [ -f "$HOME/.kube/config" ]; then 
+if [ -f "$HOME/.kube/config" ]; then
     mv -v "$HOME/.kube/config" "$HOME/.kube/config.bak"
 fi
 
@@ -62,13 +62,13 @@ sudo microk8s enable dns
 
 echo "Initialising cluster-api OpenStack provider..."
 echo "If this fails you may need a GITHUB_TOKEN, see https://stfc.atlassian.net/wiki/spaces/CLOUDKB/pages/211878034/Cluster+API+Setup for details"
-clusterctl init --infrastructure=openstack:"${CLUSTER_API_PROVIDER_OPENSTACK}"
+clusterctl init --infrastructure=openstack:"${CAPO_PROVIDER_VERSION}"
 
 echo "Importing required helm repos and packages"
 helm repo add capi https://azimuth-cloud.github.io/capi-helm-charts
 helm repo add capi-addons https://azimuth-cloud.github.io/cluster-api-addon-provider
 helm repo update
-helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_PROVIDER}"
+helm upgrade cluster-api-addon-provider capi-addons/cluster-api-addon-provider --create-namespace --install --wait -n clusters --version "${ADDON_VERSION}"
 kubectl apply -f "https://github.com/k-orc/openstack-resource-controller/releases/download/v${KORC}/install.yaml"
 
 echo ""

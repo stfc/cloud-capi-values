@@ -4,6 +4,10 @@
 # if we do this and run into any errors it will kill the user's
 # current shell (e.g. a typo)
 
+echo "Installing required tools..."
+export PATH=$PATH:/snap/bin
+sudo snap install yq
+
 # Function to convert dependencies to a valid environment variables
 sanitize_var_name() {
     echo "$1" | tr '-' '_' | tr '[:lower:]' '[:upper:]'

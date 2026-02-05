@@ -26,6 +26,8 @@ jobs:
 
     - name: Checkout 
       uses: actions/checkout@v6
+      with: 
+        ref: staging
 
     - name: Get latest upstream chart version
       id: capi-helm-chart

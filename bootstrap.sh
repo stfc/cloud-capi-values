@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Installing required tools..."
-sudo apt-get install -y snapd python3-openstackclient
-export PATH=$PATH:/snap/bin
-sudo snap install kubectl --classic
-sudo snap install helm --classic
-sudo snap install yq
-
 echo "Updating system to apply latest security patches..."
 export DEBIAN_FRONTEND=noninteractive
 sudo apt-get update -qq
@@ -16,6 +9,13 @@ sudo apt-get update -qq
 sudo apt-get -o Dpkg::Options::="--force-confold" \
              -o Dpkg::Options::="--force-confdef" \
              -y -qq upgrade > /dev/null
+
+echo "Installing required tools..."
+sudo apt-get install -y snapd python3-openstackclient yq
+
+export PATH=$PATH:/snap/bin
+sudo snap install kubectl --classic
+sudo snap install helm --classic
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then

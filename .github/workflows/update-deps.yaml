@@ -1,4 +1,7 @@
     
+permissions:
+  contents: read
+
 name: Sync Dependencies with upstream
 
 on:

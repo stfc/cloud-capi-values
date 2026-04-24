@@ -1,4 +1,7 @@
 
+permissions:
+  contents: read
+
 name: Pull Request Jobs
 
 on:

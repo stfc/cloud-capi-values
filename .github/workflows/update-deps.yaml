@@ -18,18 +18,18 @@ jobs:
     steps:
 
     - name: "Setup Github Token"
-      uses: actions/create-github-app-token@v2
+      uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 #v3.1.1
       id: app-token
       with:
         app-id: ${{ vars.APP_ID }}
         private-key: ${{ secrets.PRIVATE_KEY }}    
 
     - name: Checkout 
-      uses: actions/checkout@v6
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
 
     - name: Get latest upstream chart version
       id: capi-helm-chart
-      uses: azimuth-cloud/github-actions/helm-latest-version@master
+      uses: azimuth-cloud/github-actions/helm-latest-version@9ae9839de21f5dd3ede65728eda0019db8b692f5 #v0.23.0 
       with: 
         repository: "https://azimuth-cloud.github.io/capi-helm-charts"
         chart: "openstack-cluster"
@@ -37,7 +37,7 @@ jobs:
     # TODO: once azimuth-cloud/capi-helm-charts provides their own pinned k-orc installation method, we pick up the latest version  
     - name: "Get latest Openstack Resource Controller (K-orc) version"
       id: get-k-orc-version
-      uses: pozetroninc/github-action-get-latest-release@master
+      uses: pozetroninc/github-action-get-latest-release@2a61c339ea7ef0a336d1daa35ef0cb1418e7676c #v0.8.0
       with:
         repository: k-orc/openstack-resource-controller
         excludes: prerelease, draft
@@ -58,7 +58,7 @@ jobs:
 
     - name: "Create Pull Request for updating dependencies if changed"
       id: make-pr
-      uses: peter-evans/create-pull-request@v8
+      uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 #v8.1.0
       env:
         pr-title: "Update Build Dependencies to match upstream"
       with:

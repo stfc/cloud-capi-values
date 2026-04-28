@@ -164,7 +164,7 @@ apiServer:
 
 addons:
   # Enable monitoring by default, this deploys
-  # https://github.com/stackhpc/capi-helm-charts/blob/main/charts/cluster-addons/README.md#monitoring-and-logging
+  # https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/cluster-addons/README.md#monitoring-and-logging
   # and includes Loki which is required for central logging as per UKRI policy
   monitoring:
     enabled: true

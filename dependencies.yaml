@@ -1,4 +1,4 @@
 # https://github.com/azimuth-cloud/capi-helm-charts
-cluster-chart: "0.19.2"
+cluster-chart: "0.23.0"
 # https://github.com/k-orc/openstack-resource-controller
-k-orc: "2.4.0"
+k-orc: "2.5.0"

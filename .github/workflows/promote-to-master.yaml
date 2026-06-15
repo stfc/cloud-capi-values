@@ -1,0 +1,56 @@
+name: Open PR from staging to master
+on:
+  schedule:
+    - cron: "0 12 * * 3" # Wednesday at 12pm UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  author: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
+  committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+
+jobs:
+  prod-promotion:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Setup Github Token"
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 #v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Checkout master branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
+        with:
+          ref: master
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Merge staging into master
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin staging
+          git merge --no-commit --no-ff origin/staging || true
+          git add -A
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 #v8.1.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: promote-staging-to-prod
+          base: master
+          commit-message: "Update dependencies"
+          title: "Update dependencies"
+          author: ${{ env.author }}
+          committer: ${{ env.committer }}
+          body: |
+            Automated promotion PR to copy contents from `staging` to `master`.
+            
+            This PR was automatically created by the environment promotion workflow.
+          labels: |
+            automated
+            environment-promotion

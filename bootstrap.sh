@@ -11,11 +11,12 @@ sudo apt-get -o Dpkg::Options::="--force-confold" \
              -y -qq upgrade > /dev/null
 
 echo "Installing required tools..."
-sudo apt-get install -y snapd python3-openstackclient yq
+sudo apt-get install -y snapd python3-openstackclient 
 
 export PATH=$PATH:/snap/bin
 sudo snap install kubectl --classic
 sudo snap install helm --classic
+sudo snap install yq --classic
 
 # Check a clouds.yaml file exists in the same directory as the script
 if [ ! -f clouds.yaml ]; then

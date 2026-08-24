@@ -10,7 +10,8 @@ on:
   workflow_dispatch:
 
 env:
-  author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+  author: "${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>"
+  committer: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
 
 jobs:
   get-upstream-dependencies:
@@ -71,7 +72,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ env.pr-title }}
           author: ${{ env.author }}
-          committer: ${{ env.author }}
+          committer: ${{ env.committer }}
           branch: "deps-autoupdate"
           delete-branch: true
           title: ${{ env.pr-title }}

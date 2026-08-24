@@ -1,6 +1,5 @@
-
 permissions:
-  contents: read
+  contents: read
 
 name: Pull Request Jobs
 
@@ -16,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
       - name: Run ShellCheck
-        uses:ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 #v2.0.0
-        with: 
-          check_together: 'yes'
+        uses: ludeeus/action-shellcheck@00cae500b08a931fb5698e11e79bfbd38e612a38 #v2.0.0
+        with:
+          check_together: yes

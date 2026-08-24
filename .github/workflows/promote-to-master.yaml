@@ -16,7 +16,7 @@ jobs:
   prod-promotion:
     runs-on: ubuntu-latest
     steps:
-      - name: "Setup Github Token"
+      - name: Setup Github Token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 #v3.2.0
         id: app-token
         with:
@@ -48,7 +48,7 @@ jobs:
           committer: ${{ env.committer }}
           body: |
             Automated promotion PR to copy contents from `staging` to `master`.
-            
+
             This PR was automatically created by the environment promotion workflow.
           labels: |
             automated

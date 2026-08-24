@@ -24,16 +24,17 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
 
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
-        with:
-          ref: staging
+
+      - name: Reset staging branch
+        run: |
+          git fetch origin staging:staging
+          git reset --hard staging
 
       - name: Get current date
-        if: steps.check-changes.outputs.changes-detected == 'true'
         id: date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
       - name: Set branch and PR names
-        if: steps.check-changes.outputs.changes-detected == 'true'
         id: env-vars
         run: |
           echo "pr_title=Promote Staging to Master - ${{ steps.date.outputs.date }}" >> $GITHUB_OUTPUT
@@ -41,6 +42,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 #v8.1.1
         with:
+          branch: prod-promotion
           token: ${{ steps.app-token.outputs.token }}
           commit-message: Update dependencies
           title: ${{ steps.env-vars.outputs.pr_title }}

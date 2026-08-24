@@ -31,7 +31,8 @@ jobs:
 
       - name: Get latest upstream chart version
         id: capi-helm-chart
-        uses: azimuth-cloud/github-actions/helm-latest-version@9ae9839de21f5dd3ede65728eda0019db8b692f5 #v0.23.0
+        # https://github.com/azimuth-cloud/github-actions/tree/master/helm-latest-version
+        uses: azimuth-cloud/github-actions/helm-latest-version@master
         with:
           repository: https://azimuth-cloud.github.io/capi-helm-charts
           chart: openstack-cluster

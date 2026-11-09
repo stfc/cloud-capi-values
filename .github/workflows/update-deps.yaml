@@ -66,7 +66,7 @@ jobs:
 
       - name: Create Pull Request for updating dependencies if changed
         id: make-pr
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 #v8.1.0
+        uses: peter-evans/create-pull-request@15733dbdfeedb4f7fdb73d13c6f5ac83b710fab8 #v8.1.2
         env:
           pr-title: Update Build Dependencies to match upstream - ${{ steps.date.outputs.date }}
         with:
